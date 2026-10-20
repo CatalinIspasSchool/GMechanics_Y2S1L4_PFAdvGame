@@ -47,7 +47,7 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	//UFunction()
-	//void Move(const FInputActionValue& Value);
+	UFUNCTION()
+	void Move(const FInputActionValue& Value);
 
 };

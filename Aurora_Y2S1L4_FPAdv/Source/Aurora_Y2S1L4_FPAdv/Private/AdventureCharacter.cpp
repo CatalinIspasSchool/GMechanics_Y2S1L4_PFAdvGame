@@ -15,6 +15,19 @@ AAdventureCharacter::AAdventureCharacter()
 void AAdventureCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	check(GEngine != nullptr);
+
+	if (APlayerController* PlayerController = CastChecked<APlayerController>(Controller))
+	{
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		{
+			Subsystem->AddMappingContext(FirstPersonContext, 0);
+		}
+	}
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Emerald, TEXT("Input mapped :)"));
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Emerald, TEXT("...on paper"));
+
 	
 }
 
@@ -28,11 +41,27 @@ void AAdventureCharacter::Tick(float DeltaTime)
 // Called to bind functionality to input
 void AAdventureCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	//Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
+	{
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AAdventureCharacter::Move);
+
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
+	}
 }
-/*
+
 void AAdventureCharacter::Move(const FInputActionValue& Value)
 {
 	const FVector2D MovementValue = Value.Get<FVector2D>();
-}*/
+
+	if (Controller)
+	{
+		const FVector Right = GetActorRightVector();
+		AddMovementInput(Right, MovementValue.X);
+
+		const FVector Forward = GetActorForwardVector();
+		AddMovementInput(Forward, MovementValue.Y);
+	}
+}
