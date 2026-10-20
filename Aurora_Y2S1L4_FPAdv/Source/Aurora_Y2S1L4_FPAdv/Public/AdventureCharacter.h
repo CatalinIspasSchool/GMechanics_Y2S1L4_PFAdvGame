@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Camera/CameraComponent.h"
 #include "GameFramework/Character.h"
 #include "EnhancedInputComponent.h"
 #include "InputActionValue.h"
@@ -39,6 +40,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	TObjectPtr<UInputAction> JumpAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
+	TObjectPtr<UInputAction> LookAction;
+
+
 
 public:	
 	// Called every frame
@@ -49,5 +54,20 @@ public:
 
 	UFUNCTION()
 	void Move(const FInputActionValue& Value);
+
+	UFUNCTION()
+	void Look(const FInputActionValue& Value);
+	UPROPERTY(VisibleAnywhere, Category = Camera)
+	TObjectPtr<UCameraComponent> FirstPersonCameraComponent;
+	UPROPERTY(EditAnywhere, Catgory = Camera)
+	FVector FirstPersonCameraOffset = FVector(2.8f, 5.9f, 0.0f);
+	UPROPERTY(EditAnywhere, Category = Camera)
+	float FirstPersonFieldOfView = 70.0f;
+	UPROPERTY(EditAnywhere, Category = Camera)
+	float FirstPersonScale = 0.6f;
+
+	UPROPERTY(VisibleAnywhere, Category = Mesh)
+	TObjectPtr<USkeletalMeshComponent> FirstPersonMeshComponent;
+
 
 };
